@@ -8,7 +8,11 @@ export interface MemberType {
   last_name: string
 }
 
-function Members() {
+interface MembersProps {
+  selectedTeam?: string | null
+}
+
+function Members({ selectedTeam = null }: MembersProps) {
   const [members, setMembers] = useState<MemberType[]>([])
 
   const listItems = members.map((member) => (
@@ -20,7 +24,9 @@ function Members() {
 
   useEffect(() => {
     const fun = async () => {
-      const urlResponse = await fetch(url)
+      const urlResponse = selectedTeam
+        ? await fetch(url + '?team=' + selectedTeam)
+        : await fetch(url)
 
       const json = await urlResponse.json()
       console.log(json)
@@ -28,11 +34,11 @@ function Members() {
     }
 
     fun()
-  }, [])
+  }, [selectedTeam])
 
   return (
     <>
-      <h1>titre</h1>
+      <h1>Members</h1>
       <table>
         <tr>
           <th>Firstname</th>
