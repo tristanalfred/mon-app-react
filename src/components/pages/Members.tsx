@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import styles from './Members.module.css'
 
 const url = 'http://127.0.0.1:8000/schedule/members'
 
@@ -39,12 +40,15 @@ function Members({ selectedTeam = null }: MembersProps) {
   return (
     <>
       <h1>Members</h1>
-      <table>
-        <tr>
-          <th>Firstname</th>
-          <th>LastName</th>
-        </tr>
-        {listItems}
+
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Firstname</th>
+            <th>LastName</th>
+          </tr>
+        </thead>
+        <tbody>{listItems}</tbody>
       </table>
     </>
   )

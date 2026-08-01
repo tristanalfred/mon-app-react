@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Members from './Members'
+import styles from './Teams.module.css'
 
 const url = 'http://127.0.0.1:8000/schedule/teams'
 
@@ -14,7 +15,14 @@ interface ButtonProps {
 }
 
 function ButtonTeam({ selectedTeam, setSelectedTeam }: ButtonProps) {
-  return <button onClick={() => setSelectedTeam(selectedTeam)}>Select</button>
+  return (
+    <button
+      className={styles.button}
+      onClick={() => setSelectedTeam(selectedTeam)}
+    >
+      Select
+    </button>
+  )
 }
 
 function Teams() {
@@ -49,12 +57,14 @@ function Teams() {
   return (
     <>
       <h1>Teams</h1>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Select</th>
-        </tr>
-        {listItems}
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Select</th>
+          </tr>
+        </thead>
+        <tbody>{listItems}</tbody>
       </table>
       {selectedTeam ? <Members selectedTeam={selectedTeam} /> : null}
     </>
