@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from './Members.module.css'
+import MemberModal from './modal/MemberModal'
 
 const url = 'http://127.0.0.1:8000/schedule/members'
 
@@ -13,6 +14,10 @@ interface MembersProps {
   selectedTeam?: string | null
 }
 
+export interface ButtonProps {
+  selectedMember: string
+}
+
 function Members({ selectedTeam = null }: MembersProps) {
   const [members, setMembers] = useState<MemberType[]>([])
 
@@ -20,6 +25,10 @@ function Members({ selectedTeam = null }: MembersProps) {
     <tr key={member.id}>
       <td> {member.first_name} </td>
       <td> {member.last_name} </td>
+      <td>
+        {' '}
+        <MemberModal selectedMember={member.id}></MemberModal>{' '}
+      </td>
     </tr>
   ))
 
@@ -46,6 +55,7 @@ function Members({ selectedTeam = null }: MembersProps) {
           <tr>
             <th>Firstname</th>
             <th>LastName</th>
+            <th>Select</th>
           </tr>
         </thead>
         <tbody>{listItems}</tbody>

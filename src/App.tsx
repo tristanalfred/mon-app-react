@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Members from './components/pages/Members'
+import Members from './components/pages/members/Members'
 import MenuBox from './components/menu/MenuBox'
 import Teams from './components/pages/Teams'
 

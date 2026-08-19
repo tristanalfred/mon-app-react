@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Members from './Members'
+import Members from './members/Members'
 import styles from './Teams.module.css'
 
 const url = 'http://127.0.0.1:8000/schedule/teams'
