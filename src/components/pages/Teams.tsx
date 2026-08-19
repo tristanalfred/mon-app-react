@@ -47,8 +47,7 @@ function Teams() {
       const urlResponse = await fetch(url)
 
       const json = await urlResponse.json()
-      console.log(json)
-      setTeams(json.data)
+      setTeams(json)
     }
 
     fun()

@@ -39,8 +39,7 @@ function Members({ selectedTeam = null }: MembersProps) {
         : await fetch(url)
 
       const json = await urlResponse.json()
-      console.log(json)
-      setMembers(json.data)
+      setMembers(json)
     }
 
     fun()
