@@ -1,3 +1,4 @@
+import type { Shift, ShiftPreference } from '@/types'
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied'
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied'
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied'
@@ -8,22 +9,12 @@ import styles from './DefaultShiftTab.module.css'
 
 const urlMembers = 'http://127.0.0.1:8000/schedule/members'
 const urlShifts = 'http://127.0.0.1:8000/schedule/shifts'
+const urlShiftPreferences = 'http://127.0.0.1:8000/schedule/shiftpreferences/'
 
-type ShiftPreference = {
-  name: string
-  long_name: string
-  note: number | null
-}
-
-const shiftsSaved: ShiftPreference[] = [
-  { name: 's1', long_name: 'Morning', note: 3 },
-  { name: 's2', long_name: 'Afternoon', note: 3 },
-  { name: 's3', long_name: 'Night', note: 1 },
-]
+type ShiftNoted = Shift & { note: number | null }
 
 function ListShifts({ selectedMember }: ButtonProps) {
-  const [preference, setPreference] =
-    React.useState<ShiftPreference[]>(shiftsSaved)
+  const [preference, setPreference] = React.useState<ShiftNoted[]>([])
 
   React.useEffect(() => {
     const fun = async () => {
@@ -32,21 +23,21 @@ function ListShifts({ selectedMember }: ButtonProps) {
       )
       const urlShiftsResponse = await fetch(urlShifts)
 
-      const memberShiftsJson: ShiftPreference[] = (
+      const memberShiftsJson: ShiftPreference[] =
         await urlMembersResponse.json()
-      ).data
-      const shiftsJson = (await urlShiftsResponse.json()).data
+      const shiftsJson = await urlShiftsResponse.json()
 
-      const shiftsJsonComplete: ShiftPreference[] = []
+      const shiftsJsonComplete: ShiftNoted[] = []
 
       for (let i = 0; i < shiftsJson.length; i++) {
         const shiftStored = memberShiftsJson.find(
-          (s) => s.name === shiftsJson[i].name
+          (s) => s.shift === shiftsJson[i].name
         )
 
         shiftsJsonComplete.push({
           name: shiftsJson[i].name,
           long_name: shiftsJson[i].long_name,
+          description: shiftsJson[i].description,
           note: shiftStored ? shiftStored.note : null,
         })
       }
@@ -99,6 +90,25 @@ function ListShifts({ selectedMember }: ButtonProps) {
 }
 
 export default function DefaultShiftTab({ selectedMember }: ButtonProps) {
+  function sendNewPreferences(preferences: ShiftNoted[]): void {
+    preferences.forEach((preference) => {
+      if (preference.note) {
+        fetch(urlShiftPreferences, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            member: selectedMember,
+            shift: preference.name,
+            note: preference.note,
+          }),
+        })
+      }
+    })
+  }
+
   return (
     <>
       <div>
@@ -116,7 +126,9 @@ export default function DefaultShiftTab({ selectedMember }: ButtonProps) {
         </table>
       </div>
 
-      <button className={styles.button}>Save</button>
+      <button className={styles.button} onClick={sendNewPreferences}>
+        Save
+      </button>
     </>
   )
 }
